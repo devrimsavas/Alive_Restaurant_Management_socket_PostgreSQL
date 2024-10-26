@@ -1,9 +1,0 @@
-
-
-
-ADMIN_USERNAME="sa"
-ADMIN_PASSWORD="<your_password>
-DATABASE_NAME=<your_database_name>
-HOST="localhost"
-DIALECT="mssql"
-PORT=8001

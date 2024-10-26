@@ -1,0 +1,20 @@
+
+
+# Env for MYSSQL 
+ADMIN_USERNAME="sa"
+ADMIN_PASSWORD="<your_password>
+DATABASE_NAME=<your_database_name>
+HOST="localhost"
+DIALECT="mssql"
+PORT=8001
+
+
+# ENv for POSTgreSQL GOOGLE cloud
+
+
+ADMIN_USERNAME="postgres"
+ADMIN_PASSWORD=<password>
+DATABASE_NAME="postgres"
+HOST="34.xxx.xxx.xxx"
+DIALECT="postgres"
+PORT=8001
