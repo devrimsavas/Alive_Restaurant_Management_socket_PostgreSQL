@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microservices Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Extra styles to enhance layout */
+        .iframe-large {
+            width: 100%;
+            height: 500px;
+            border: 2px solid #dee2e6;
+        }
+
+        .iframe-small {
+            width: 100%;
+            height: 400px;
+            border: 2px solid #dee2e6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid mt-4">
+        <h1 class="text-center mb-4">Microservices Dashboard Using WebSocket </h1>
+        <h3 class="mb-3">Multi Viewer</h3>
+        <button type="button" class="btn btn-primary mb-4" onclick="window.location.reload()">RELOAD</button>
+
+        <div class="row mb-4">
+            <!-- Customer Service (large) -->
+            <div class="col-md-6 shadow">
+                <iframe id="customerIframe" src="http://localhost:8001" class="iframe-large"
+                    title="Customer Service"></iframe>
+            </div>
+
+            <!-- Employee Service (large) -->
+            <div class="col-md-6">
+                <iframe id="employeeIframe" src="http://localhost:8002" class="iframe-large"
+                    title="Employee Service"></iframe>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Management Service (small) -->
+            <div class="col-md-6 shadow">
+                <iframe id="managementIframe" src="http://localhost:8003" class="iframe-large"
+                    title="Management Service"></iframe>
+            </div>
+
+            <!-- Waiting List Service (small) -->
+            <div class="col-md-6 shadow">
+                <iframe id="waitingListIframe" src="http://localhost:8004" class="iframe-large"
+                    title="Waiting List Service"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO from CDN -->
+    <script src="https://cdn.socket.io/4.8.0/socket.io.min.js"></script>
+
+    <script>
+        const socket = io("http://localhost:8000");
+
+        // Listen for events and send them to the iframes
+        socket.on("newOrderToKitchen", (order) => {
+            const employeeIframe = document.getElementById("employeeIframe").contentWindow;
+            employeeIframe.postMessage({ event: "newOrder", data: order }, "http://localhost:8002");
+        });
+
+        socket.on("orderReadyToWaitingList", (order) => {
+            const waitingListIframe = document.getElementById("waitingListIframe").contentWindow;
+            waitingListIframe.postMessage({ event: "orderReady", data: order }, "http://localhost:8004");
+        });
+    </script>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

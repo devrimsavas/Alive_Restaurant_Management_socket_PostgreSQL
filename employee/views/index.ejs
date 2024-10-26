@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+    <!-- Back to Gateway Button -->
+    <div class="container mt-3">
+        <a href="http://localhost:8000" class="btn btn-outline-secondary">
+            <i class="bi bi-rewind"></i> Back to Gateway
+        </a>
+    </div>
+
+    <div class="container mt-5">
+        <h1> Kitchen Interface Orders:</h1>
+        <hr>
+        <div class="list-group">
+            <% if (orders.length> 0) { %>
+                <% orders.forEach(function(order) { %>
+                    <div class="row px-3 py-1 w-100">
+                        <span class="col py-1 bg-info">
+                            <%=order.FirstName%>
+                                <%=order.LastName%>
+                        </span>
+                        <span class="col py-1 bg-info">
+                            <%=order.DishName%>
+                        </span>
+                        <button onclick="serve('<%=order.OrderId%>')" class="col btn btn-secondary">Ready</button>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <div class="text-center">
+                                <h2>No orders available</h2>
+                            </div>
+                            <% } %>
+        </div>
+    </div>
+
+
+
+    <script src="/socket.io/socket.io.js"></script> <!-- Include the Socket.IO client library -->
+    <script>
+        // Connect to the gateway using Socket.IO
+        var socket = io("http://localhost:8000"); // Make sure this URL matches the gateway's URL
+
+        // Listen for the newOrderToKitchen event from the gateway
+        socket.on("newOrderToKitchen", function (order) {
+            console.log("New order received in the kitchen:", order);
+
+            // Create a new order row dynamically and append it to the order list
+            const ordersList = document.querySelector(".list-group");
+            const orderRow = document.createElement("div");
+            orderRow.classList.add("row", "px-3", "py-1", "w-100");
+
+            orderRow.innerHTML = `
+          <span class="col py-1 bg-info">${order.FirstName} ${order.LastName}</span>
+          <span class="col py-1 bg-info">${order.DishName}</span>
+          <button onclick="serve('${order.OrderId}')" class="col btn btn-secondary">Ready</button>
+        `;
+
+            ordersList.appendChild(orderRow);
+        });
+
+        // Existing function for marking an order as ready
+        function serve(id) {
+            console.log("OrderId is: ", id);
+
+            const baseUrl = window.location.origin.includes("8000") ? "/employee" : "/";
+            fetch(baseUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    OrderId: id
+                })
+            }).then((response) => {
+                if (response.ok) {
+                    const resData = 'Updated an order';
+                    location.reload();
+                    return Promise.resolve(resData);
+                }
+                return Promise.reject(response);
+            })
+                .catch((response) => {
+                    alert(response.statusText);
+                });
+        }
+    </script>
+</body>
+
+</html>

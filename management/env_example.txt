@@ -1,0 +1,6 @@
+ADMIN_USERNAME=<azure-admin-username>
+ADMIN_PASSWORD=<azure-admin-password>
+DATABASE_NAME=<databasename>
+HOST="<databaseservername>ver.database.windows.net"
+DIALECT="mssql"
+PORT=8003
