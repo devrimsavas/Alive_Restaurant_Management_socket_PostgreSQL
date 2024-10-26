@@ -1,6 +1,0 @@
-ADMIN_USERNAME="sa"
-ADMIN_PASSWORD="7HT&yp6@CZ&BwKy"
-DATABASE_NAME="mytestdatabase"
-HOST="localhost"
-DIALECT="mssql"
-PORT=8001
